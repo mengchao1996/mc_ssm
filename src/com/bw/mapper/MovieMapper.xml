@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw.mapper.MovieMapper">
+	
+	<select id="getList" resultType="map">
+		select a.*,GROUP_CONCAT(c.tname)tnames from movie a LEFT JOIN centers b on a.mid=b.mid left JOIN types c on b.tid=c.tid 
+		<where>
+			<if test="mname!=null and mname!=''">
+				and a.mname like '%${mname}%'
+			</if>
+			<if test="types!=null and types!=''">
+				and c.tid in (${types})
+			</if>
+		</where>
+		GROUP BY a.mid limit #{StartPage},#{PageSize}
+	</select>
+	
+	<select id="getTypes" resultType="map">
+		select * from types
+	</select>
+	
+	<select id="getCount" resultType="int">
+		select count(*) from movie
+	</select>
+	
+	<select id="toAdd" resultType="map">
+		select * from types
+	</select>
+	
+	
+	<delete id="delCenter">
+		delete from centers where mid in (${mid})
+	</delete>
+	<delete id="delMovie">
+		delete from movie where mid in (${mid})
+	</delete>
+	
+	<insert id="addMovie">
+		<selectKey order="AFTER" keyProperty="mid" resultType="int">
+			select last_insert_id();
+		</selectKey>
+		insert into movie set mname=#{mname},price=#{price},type=#{type},dtime=#{dtime}
+	</insert>
+	
+	<insert id="addCenters">
+		insert into centers set mid=${tid},tid=${mid}
+	</insert>
+	
+	<select id="MovieId" resultType="movie">
+		select * from movie where mid=#{mid}
+	</select>
+	
+	<select id="CentersId" resultType="map">
+		select * from centers where mid=#{mid}
+	</select>
+	
+	<delete id="deleteCenters">
+		delete from centers where mid=#{mid}
+	</delete>
+	<update id="updatetMovie">
+		update movie set mname=#{mname},price=#{price},type=#{type},dtime=#{dtime} where mid=#{mid}
+	</update>
+</mapper>

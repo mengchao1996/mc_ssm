@@ -1,0 +1,5 @@
+log4j.rootLogger=ALL,aaa
+
+log4j.appender.aaa=org.apache.log4j.ConsoleAppender 
+log4j.appender.aaa.layout=org.apache.log4j.PatternLayout
+log4j.appender.aaa.layout.ConversionPattern=[QC] %p [%t] %C.%M(%L) | %m%n
